@@ -6,11 +6,13 @@ import (
 	"sync"
 
 	"github.com/gin-gonic/gin"
+	httpx "github.com/liuxiaobopro/gobox/http"
 	respx "github.com/liuxiaobopro/gobox/resp"
 )
 
 type handle struct {
 	BuyLock sync.Mutex
+	httpx.GinHandle
 }
 
 func main() {
@@ -37,7 +39,7 @@ var (
 )
 
 func (handle *handle) busyBuy(c *gin.Context) {
-	uid := c.Query("uid")
+	uid := handle.Query(c, "uid")
 
 	handle.BuyLock.Lock()
 	defer handle.BuyLock.Unlock()

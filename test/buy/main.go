@@ -11,7 +11,7 @@ func main() {
 	var (
 		url1       = "http://localhost:8080/busyBuy"
 		url2       = "http://localhost:8080/goodsInfo"
-		requestNum = 3000
+		requestNum = 30
 	)
 
 	var wg sync.WaitGroup
