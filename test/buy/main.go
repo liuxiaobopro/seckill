@@ -2,42 +2,41 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"net/http"
 	"sync"
+
+	httpx "github.com/liuxiaobopro/gobox/http"
 )
 
 func main() {
-	url := "http://localhost:8080/busyBuy"
-	forNum := 0
-	requestNum := 10
+	var (
+		url1       = "http://localhost:8080/busyBuy"
+		url2       = "http://localhost:8080/goodsInfo"
+		requestNum = 10
+	)
 
 	var wg sync.WaitGroup
 	wg.Add(requestNum)
 
-	for {
-		if forNum > requestNum {
-			break
-		}
-		go func() {
+	for i := 0; i < requestNum; i++ {
+		go func(forNum int) {
 			defer wg.Done()
-			// get请求
-			resp, err := http.Get(url)
+			httpCli := httpx.Client{Url: url1}
+			resp, err := httpCli.Get()
 			if err != nil {
 				panic(err)
 			}
-			defer resp.Body.Close()
-
-			// 读取响应
-			body, err := ioutil.ReadAll(resp.Body)
-			if err != nil {
-				panic(err)
-			}
-			fmt.Println(string(body))
-		}()
-		forNum++
+			fmt.Println(string(resp))
+		}(i)
 	}
 
 	wg.Wait()
+
+	httpCli := httpx.Client{Url: url2}
+	resp, err := httpCli.Get()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(resp))
+
 	fmt.Println("request over")
 }
