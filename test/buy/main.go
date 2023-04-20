@@ -11,7 +11,7 @@ func main() {
 	var (
 		url1       = "http://localhost:8080/busyBuy"
 		url2       = "http://localhost:8080/goodsInfo"
-		requestNum = 10
+		requestNum = 3000
 	)
 
 	var wg sync.WaitGroup
@@ -20,7 +20,7 @@ func main() {
 	for i := 0; i < requestNum; i++ {
 		go func(forNum int) {
 			defer wg.Done()
-			httpCli := httpx.Client{Url: url1}
+			httpCli := httpx.Client{Url: url1 + "?uid=" + fmt.Sprint(forNum)}
 			resp, err := httpCli.Get()
 			if err != nil {
 				panic(err)
